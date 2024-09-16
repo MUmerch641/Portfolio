@@ -4,15 +4,17 @@ const cors = require('cors');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'https://portfolio-m17q-client-a88d2cm0w-mumerch641s-projects.vercel.app' // Allow your client origin
+}));
 app.use(express.json());
 
 // Nodemailer configuration
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // or another email service like Outlook, Yahoo, etc.
+  service: 'gmail',
   auth: {
-    user: 'abubakaramin2006@gmail.com', // Your email
-    pass: 'yrss dfpw znks yveh',  // App password (not your regular password)
+    user: 'abubakaramin2006@gmail.com',
+    pass: 'yrss dfpw znks yveh',
   },
 });
 
@@ -24,7 +26,7 @@ app.post('/contact', (req, res) => {
 
   const mailOptions = {
     from: email,
-    to: 'abubakaramin2006@gmail.com', // Replace with your receiving email address
+    to: 'abubakaramin2006@gmail.com',
     subject: `New Contact Form Submission from ${firstName} ${lastName}`,
     text: `Name: ${firstName} ${lastName}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`,
   };
