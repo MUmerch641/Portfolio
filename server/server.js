@@ -1,17 +1,20 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
+const cors = require('cors');
 const app = express();
-require('dotenv').config(); // To load .env variables in local dev
+require('dotenv').config(); 
+
+
+
+
+// CORS configuration
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
+}));
 
 app.use(express.json());
-
-// Handle preflight requests (OPTIONS method)
-app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins temporarily for testing
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.send();
-});
 
 // Nodemailer configuration
 const transporter = nodemailer.createTransport({
@@ -24,11 +27,6 @@ const transporter = nodemailer.createTransport({
 
 // Route to handle form submission
 app.post('/contact', (req, res) => {
-  // Manually set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins temporarily for testing
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
   const { firstName, lastName, email, phone, message } = req.body;
 
   const mailOptions = {
@@ -48,6 +46,11 @@ app.post('/contact', (req, res) => {
     }
   });
 });
+
+app.get('/test', (req, res) => {
+  res.send('Server is working!');
+});
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
