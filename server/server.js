@@ -6,21 +6,18 @@ const app = express();
 // Allowed origins
 const allowedOrigins = [
   'https://portfolio-m17q-client-pc9whoylb-mumerch641s-projects.vercel.app',
-  'https://portfolio-m17q-client-a88d2cm0w-mumerch641s-projects.vercel.app' // Add any other allowed origins here
+  'https://portfolio-m17q-client-a88d2cm0w-mumerch641s-projects.vercel.app',
+  'https://portfolio-m17q-client-mp2uhygem-mumerch641s-projects.vercel.app' // Add the new origin here
 ];
+
 
 // CORS configuration
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*', // This will allow requests from any origin, useful for debugging
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
 }));
+
 
 app.use(express.json());
 
