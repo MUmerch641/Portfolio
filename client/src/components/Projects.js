@@ -12,8 +12,6 @@ import projImg8 from '../assets/img/8.jpg';
 import projImg9 from '../assets/img/9.jpg';
 import colorSharp2 from '../assets/img/color-sharp2.png';
 
-
-
 import projImgWeb1 from '../assets/img/Detail Image 01web.jpg';
 import projImg1m from '../assets/img/1web.jpg';
 import projImgWeb2 from '../assets/img/2web.jpg';
@@ -21,8 +19,8 @@ import projImgWeb3 from '../assets/img/3web.jpg';
 import projImgWeb4 from '../assets/img/4web.jpg';
 import projImgWeb5 from '../assets/img/5web.jpg';
 
-
-
+import { LazyLoadImage } from 'react-lazy-load-image-component'; // Import LazyLoadImage
+import 'react-lazy-load-image-component/src/effects/blur.css'; // Import optional effects
 import TrackVisibility from 'react-on-screen';
 import $ from 'jquery';
 import 'tilt.js'; // Ensure Tilt.js is imported
@@ -124,24 +122,22 @@ export const Projects = () => {
     },
   ];
 
-
   useEffect(() => {
     // Initialize Tilt.js for elements with class 'js-tilt'
     const tiltElements = $('.js-tilt');
-
     tiltElements.tilt({
-      glare: false,      // Disable glare effect
-      maxGlare: 0,       // No glare effect
-      perspective: 1500, // Perspective for 3D effect
-      scale: 1,          // Scale on hover
-      reset: true        // Reset effect after mouse leaves
+      glare: false,
+      maxGlare: 0,
+      perspective: 1500,
+      scale: 1,
+      reset: true,
     });
 
     // Cleanup on component unmount
     return () => {
       tiltElements.tilt('destroy');
     };
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   return (
     <section className="project" id="projects">
@@ -170,9 +166,7 @@ export const Projects = () => {
 
                     <Tab.Content
                       id="slideInUp"
-                      className={
-                        isVisible ? 'animate__animated animate__slideInUp' : ''
-                      }
+                      className={isVisible ? 'animate__animated animate__slideInUp' : ''}
                     >
                       <Tab.Pane eventKey="first">
                         <Row className="justify-content-center">
@@ -193,7 +187,7 @@ export const Projects = () => {
                       </Tab.Pane>
 
                       <Tab.Pane eventKey="second">
-                      <Row className="justify-content-center">
+                        <Row className="justify-content-center">
                           {projectsMobile.map((project) => (
                             <Col
                               key={project.id}
@@ -209,15 +203,6 @@ export const Projects = () => {
                           ))}
                         </Row>
                       </Tab.Pane>
-                      <Tab.Pane eventKey="third">
-                        <p>
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Cumque quam, quod neque provident velit, rem
-                          explicabo excepturi id illo molestiae blanditiis,
-                          eligendi dicta officiis asperiores delectus quasi
-                          inventore debitis quo.
-                        </p>
-                      </Tab.Pane>
                     </Tab.Content>
                   </Tab.Container>
                 </div>
@@ -230,4 +215,18 @@ export const Projects = () => {
     </section>
   );
 };
+
+// Modify the ProjectCard component to use LazyLoadImage
+export const ProjectCard = ({ title, description, imgUrl }) => {
+  return (
+    <div className="proj-imgbx">
+      <LazyLoadImage src={imgUrl} alt={title} effect="blur" />
+      <div className="proj-txtx">
+        <h4>{title}</h4>
+        <span>{description}</span>
+      </div>
+    </div>
+  );
+};
+
 export default Projects;
