@@ -128,7 +128,6 @@ export const Projects = () => {
   useEffect(() => {
     // Initialize Tilt.js for elements with class 'js-tilt'
     const tiltElements = $('.js-tilt');
-    console.log('Tilt elements:', tiltElements); // Debug: Check if elements are selected
 
     tiltElements.tilt({
       glare: false,      // Disable glare effect

@@ -88,11 +88,11 @@ export const Banner = () => {
 
                   <div className="buttons">
                     <div>
-                      <a href="/Abcv.pdf" className="download-btn" download>
+                      <a href="/Abcv.pdf" className="download-btn nowrap" download>
                         Download CV
                       </a>
                     </div>
-                    <button onClick={() => console.log("connect")}>
+                    <button className="nowrap" onClick={() => console.log("connect")}>
                       Let’s Connect <ArrowRightCircle size={25} />
                     </button>
                   </div>
