@@ -9,11 +9,7 @@
   "routes": [
     {
       "src": "/contact",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/test",
-      "dest": "/server.js"
+      "dest": "./server.js"
     },
     {
       "src": "/(.*)",
