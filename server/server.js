@@ -1,16 +1,30 @@
-require('dotenv').config();
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const app = express();
 
-// Middleware
+// Allowed origins
+const allowedOrigins = [
+  'https://portfolio-m17q-client-pc9whoylb-mumerch641s-projects.vercel.app',
+  'https://portfolio-m17q-client-a88d2cm0w-mumerch641s-projects.vercel.app' // Add any other allowed origins here
+];
+
+// CORS configuration
 app.use(cors({
-  origin: 'https://portfolio-m17q-client-a88d2cm0w-mumerch641s-projects.vercel.app'
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
 }));
+
 app.use(express.json());
 
-// Nodemailer configuration
+// Nodemailer configuration (ensure you handle credentials safely)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
