@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
@@ -5,7 +6,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'https://portfolio-m17q-client-a88d2cm0w-mumerch641s-projects.vercel.app' // Allow your client origin
+  origin: 'https://portfolio-m17q-client-a88d2cm0w-mumerch641s-projects.vercel.app'
 }));
 app.use(express.json());
 
@@ -13,20 +14,18 @@ app.use(express.json());
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'abubakaramin2006@gmail.com',
-    pass: 'yrss dfpw znks yveh',
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
 // Route to handle form submission
 app.post('/contact', (req, res) => {
-  console.log("Entered");
-  res.send("Send")
   const { firstName, lastName, email, phone, message } = req.body;
 
   const mailOptions = {
     from: email,
-    to: 'abubakaramin2006@gmail.com',
+    to: process.env.EMAIL_USER,
     subject: `New Contact Form Submission from ${firstName} ${lastName}`,
     text: `Name: ${firstName} ${lastName}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`,
   };
@@ -43,7 +42,7 @@ app.post('/contact', (req, res) => {
 });
 
 // Start the server
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
