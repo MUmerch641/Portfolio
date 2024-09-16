@@ -18,6 +18,8 @@ const transporter = nodemailer.createTransport({
 
 // Route to handle form submission
 app.post('/contact', (req, res) => {
+  console.log("Entered");
+  res.send("Send")
   const { firstName, lastName, email, phone, message } = req.body;
 
   const mailOptions = {
