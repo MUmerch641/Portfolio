@@ -1,27 +1,19 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
-const cors = require('cors');
 const app = express();
-
-// Allowed origins
-const allowedOrigins = [
-  'https://portfolio-m17q-client-pc9whoylb-mumerch641s-projects.vercel.app',
-  'https://portfolio-m17q-client-a88d2cm0w-mumerch641s-projects.vercel.app',
-  'https://portfolio-m17q-client-mp2uhygem-mumerch641s-projects.vercel.app' // Add the new origin here
-];
-
-
-// CORS configuration
-app.use(cors({
-  origin: '*', // This will allow requests from any origin, useful for debugging
-  methods: ['GET', 'POST', 'OPTIONS'],
-  credentials: true,
-}));
-
+require('dotenv').config(); // To load .env variables in local dev
 
 app.use(express.json());
 
-// Nodemailer configuration (ensure you handle credentials safely)
+// Handle preflight requests (OPTIONS method)
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins temporarily for testing
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.send();
+});
+
+// Nodemailer configuration
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -32,6 +24,11 @@ const transporter = nodemailer.createTransport({
 
 // Route to handle form submission
 app.post('/contact', (req, res) => {
+  // Manually set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins temporarily for testing
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   const { firstName, lastName, email, phone, message } = req.body;
 
   const mailOptions = {
