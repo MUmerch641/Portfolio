@@ -2,76 +2,76 @@ import React, { useEffect } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-export const Experience = () => {
-  useEffect(() => {
-    // Register the ScrollTrigger plugin with GSAP
-    gsap.registerPlugin(ScrollTrigger);
+export const Experience = () => { useEffect(() => {
+  // Register the ScrollTrigger plugin with GSAP
+  gsap.registerPlugin(ScrollTrigger);
 
-    // Get the screen width to check if it's below 500px
-    const screenWidth = window.innerWidth;
+  // Get the screen width to check if it's below 500px
+  const screenWidth = window.innerWidth;
 
-    // Only run animations if screen width is above 500px
-    if (screenWidth > 500) {
-      const items = document.querySelectorAll(".timeline-item");
+  // Only run animations if screen width is above 500px
+  if (screenWidth > 500) {
+    const items = document.querySelectorAll(".timeline-item");
 
-      items.forEach((item, index) => {
-        gsap.fromTo(
-          item,
-          {
-            x: index % 2 === 0 ? "-100%" : "100%", // Different directions based on index
-            opacity: 0,
+    items.forEach((item, index) => {
+      gsap.fromTo(
+        item,
+        {
+          x: index % 2 === 0 ? "-100%" : "100%", // Different directions based on index
+          opacity: 0,
+        },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 80%", // When the item enters 80% from the top of the viewport
+            toggleActions: "play none none none", // Only play the animation on enter
           },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 80%", // When the item enters 80% from the top of the viewport
-              toggleActions: "play none none none", // Only play the animation on enter
-            },
-          }
-        );
-      });
-    }
-  }, []); // Run only once on component mount
+        }
+      );
+    });
+  }
+}, []); // Run only once on component mount
 
 
 
-  useEffect(() => {
-    // Register the ScrollTrigger plugin with GSAP
-    gsap.registerPlugin(ScrollTrigger);
+useEffect(() => {
+  // Register the ScrollTrigger plugin with GSAP
+  gsap.registerPlugin(ScrollTrigger);
 
-    // Get the screen width to check if it's below 500px
-    const screenWidth = window.innerWidth;
+  // Get the screen width to check if it's below 500px
+  const screenWidth = window.innerWidth;
 
-    // Only run animations if screen width is above 500px
-    if (screenWidth < 500) {
-      const items = document.querySelectorAll(".timeline-item");
+  // Only run animations if screen width is above 500px
+  if (screenWidth < 500) {
+    const items = document.querySelectorAll(".timeline-item");
 
-      items.forEach((item, index) => {
-        gsap.fromTo(
-          item,
-          {
-            x: "-100%", // Different directions based on index
-            opacity: 0,
+    items.forEach((item, index) => {
+      gsap.fromTo(
+        item,
+        {
+          x: "-110%", // Different directions based on index
+          opacity: 0,
+        },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 1,
+          delay:0.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 10%", // When the item enters 80% from the top of 
+            toggleActions: "play none none none", // Only play the animation on enter
           },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 80%", // When the item enters 80% from the top of the viewport
-              toggleActions: "play none none none", // Only play the animation on enter
-            },
-          }
-        );
-      });
-    }
-  }, []); // Run only once on component mount
+        }
+      );
+    });
+  }
+}, []); // Run only once on component mount
 
 
 

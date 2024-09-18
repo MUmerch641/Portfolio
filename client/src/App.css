@@ -769,6 +769,11 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
 
 
 @media (max-width: 800px) {
+
+  .hdrImg{
+    margin-top: 24px;
+  }
+
   .banner img {
     animation: none;
     -webkit-animation: none;

@@ -11,7 +11,7 @@ export const Banner = () => {
   const [text, setText] = useState("");
   const [delta, setDelta] = useState(300 - Math.random() * 100);
   const [index, setIndex] = useState(1);
-  const toRotate = ["Graphic Designer", "UI/UX DESIGNER"];
+  const toRotate = ["GRAPHIC DESIGNER", "UI/UX DESIGNER"];
   const period = 2000;
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export const Banner = () => {
               {({ isVisible }) => (
                 <div
                   className={
-                    isVisible ? "animate__animated animate__zoomIn" : ""
+                    isVisible ? "animate__animated animate__zoomIn hdrImg" : " hdrImg"
                   }
                 >
                   <img src={headerImg} alt="Header Img" />
