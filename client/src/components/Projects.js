@@ -217,16 +217,6 @@ export const Projects = () => {
 };
 
 // Modify the ProjectCard component to use LazyLoadImage
-export const ProjectCard = ({ title, description, imgUrl }) => {
-  return (
-    <div className="proj-imgbx">
-      <LazyLoadImage src={imgUrl} alt={title} effect="blur" />
-      <div className="proj-txtx">
-        <h4>{title}</h4>
-        <span>{description}</span>
-      </div>
-    </div>
-  );
-};
+
 
 export default Projects;

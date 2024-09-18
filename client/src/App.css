@@ -769,6 +769,10 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
 
 
 @media (max-width: 800px) {
+  .banner img {
+    animation: none;
+    -webkit-animation: none;
+}
   .buttons{
     display: flex;
     flex-wrap: wrap;
@@ -986,3 +990,6 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
   
   white-space: nowrap;
 }
+
+
+
