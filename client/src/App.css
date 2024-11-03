@@ -501,8 +501,10 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
 }
 .proj-imgbx:hover::before {
   height: 100%;
+  z-index: 10;
 }
 .proj-txtx {
+  z-index: 20;
   position: absolute;
   text-align: center;
   top: 65%;
