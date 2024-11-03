@@ -78,7 +78,7 @@ export const Banner = () => {
                     </span>
                   </h1>
                   <p>
-                    I'm a UI/UX & Graphic Designer with over 4
+                    I'm a UI/UX & Graphic Designer with over 2
                     years of experience. I help startups and businesses turn
                     ideas into exceptional products through pixel-perfect
                     design. My focus is on creating attractive, clean, and
