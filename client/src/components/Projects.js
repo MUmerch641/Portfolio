@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Row, Col, Tab, Nav } from 'react-bootstrap';
 import { ProjectCard } from './ProjectCard';
+// Import optimized versions of your images (smaller file sizes)
+// For each image type, create thumbnail versions (around 300-500px width)
 import projImg1 from '../assets/img/1.jpg';
 import projImg2 from '../assets/img/2.jpg';
 import projImg3 from '../assets/img/3.jpg';
@@ -10,9 +12,7 @@ import projImg6 from '../assets/img/6.jpg';
 import projImg7 from '../assets/img/7.jpg';
 import projImg8 from '../assets/img/8.jpg';
 import projImg9 from '../assets/img/9.jpg';
-import colorSharp2 from '../assets/img/color-sharp2.png';
 
-import projImgWeb1 from '../assets/img/Detail Image 01web.jpg';
 import projImg1m from '../assets/img/1web.jpg';
 import projImgWeb2 from '../assets/img/2web.jpg';
 import projImgWeb3 from '../assets/img/3web.jpg';
@@ -33,15 +33,24 @@ import projSocialImg11 from '../assets/img/11s.jpg';
 import projSocialImg12 from '../assets/img/12s.jpg';
 import projSocialImg13 from '../assets/img/13s.jpg';
 import projSocialImg14 from '../assets/img/14s.jpg';
+import projSocialImg15 from '../assets/img/15s.jpeg';
+import projSocialImg16 from '../assets/img/16s.jpeg';
 
-
-import { LazyLoadImage } from 'react-lazy-load-image-component'; // Import LazyLoadImage
-import 'react-lazy-load-image-component/src/effects/blur.css'; // Import optional effects
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import TrackVisibility from 'react-on-screen';
 import $ from 'jquery';
-import 'tilt.js'; // Ensure Tilt.js is imported
+import 'tilt.js';
 
 export const Projects = () => {
+  const [activeTab, setActiveTab] = useState('first');
+  const [visibleItems, setVisibleItems] = useState({
+    first: 2,
+    second: 2,
+    third: 2
+  });
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadingError, setLoadingError] = useState(false);
+
   const projectsMobile = [
     {
       id: 1,
@@ -75,7 +84,7 @@ export const Projects = () => {
     },
     {
       id: 6,
-      title: 'PArkMyCar',
+      title: 'ParkMyCar', // Fixed typo in the title
       description: 'Design & Development',
       imgUrl: projImg6,
     },
@@ -100,12 +109,12 @@ export const Projects = () => {
   ];
 
   const projectsWeb = [
-    {
-      id: 1,
-      title: 'Defeat Depression',
-      description: 'Design & Development',
-      imgUrl: projImgWeb1,
-    },
+    // {
+    //   id: 1,
+    //   title: 'Defeat Depression',
+    //   description: 'Design & Development',
+    //   imgUrl: projImgWeb1,
+    // },
     {
       id: 5,
       title: 'Build Dream',
@@ -153,25 +162,166 @@ export const Projects = () => {
     { id: 12, title: 'Social Campaign 12', description: 'Post Design & Engagement', imgUrl: projSocialImg12 },
     { id: 13, title: 'Social Campaign 13', description: 'Post Design & Engagement', imgUrl: projSocialImg13 },
     { id: 14, title: 'Social Campaign 14', description: 'Post Design & Engagement', imgUrl: projSocialImg14 },
-  ];
+    { id: 15, title: 'Social Campaign 15', description: 'Post Design & Engagement', imgUrl: projSocialImg15 },
+    { id: 16, title: 'Social Campaign 16', description: 'Post Design & Engagement', imgUrl: projSocialImg16 },
   
+  ];
 
   useEffect(() => {
+    // Preload critical images for the active tab
+    const preloadImages = () => {
+      let imagesToPreload = [];
+      
+      if (activeTab === 'first') {
+        imagesToPreload = projectsWeb.slice(0, visibleItems.first).map(p => p.imgUrl);
+      } else if (activeTab === 'second') {
+        imagesToPreload = projectsMobile.slice(0, visibleItems.second).map(p => p.imgUrl);
+      } else if (activeTab === 'third') {
+        imagesToPreload = projectSocial.slice(0, visibleItems.third).map(p => p.imgUrl);
+      }
+      
+      // Preload first few visible images
+      let loadedCount = 0;
+      let errorCount = 0;
+      
+      imagesToPreload.forEach(src => {
+        const img = new Image();
+        img.onload = () => {
+          loadedCount++;
+          if (loadedCount + errorCount === imagesToPreload.length) {
+            setImagesLoaded(true);
+          }
+        };
+        img.onerror = () => {
+          errorCount++;
+          console.error(`Failed to preload image: ${src}`);
+          if (loadedCount + errorCount === imagesToPreload.length) {
+            setImagesLoaded(true);
+            if (errorCount > imagesToPreload.length / 2) {
+              setLoadingError(true);
+            }
+          }
+        };
+        img.src = src;
+      });
+    };
+
+    setImagesLoaded(false);
+    preloadImages();
+
     // Initialize Tilt.js for elements with class 'js-tilt'
-    const tiltElements = $('.js-tilt');
-    tiltElements.tilt({
-      glare: false,
-      maxGlare: 0,
-      perspective: 1500,
-      scale: 1,
-      reset: true,
-    });
+    try {
+      const tiltElements = $('.js-tilt');
+      if (tiltElements.length > 0 && typeof tiltElements.tilt === 'function') {
+        tiltElements.tilt({
+          glare: false,
+          maxGlare: 0,
+          perspective: 1000, // Reduced for better performance
+          scale: 1,
+          reset: true,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to initialize tilt.js:", error);
+    }
+
+    // Implement intersection observer to load more items when user scrolls
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Load more items when user approaches bottom of list
+          setVisibleItems(prev => ({
+            ...prev,
+            [activeTab]: prev[activeTab] + 2 // Show 2 more items
+          }));
+        }
+      });
+    }, { threshold: 0.1 });
+
+    // Observe a sentinel element
+    const sentinel = document.getElementById('load-more-sentinel');
+    if (sentinel) {
+      observer.observe(sentinel);
+    }
 
     // Cleanup on component unmount
     return () => {
-      tiltElements.tilt('destroy');
+      try {
+        const tiltElements = $('.js-tilt');
+        if (tiltElements.length > 0 && typeof tiltElements.tilt === 'function') {
+          tiltElements.tilt('destroy');
+        }
+      } catch (error) {
+        console.error("Failed to destroy tilt.js:", error);
+      }
+      
+      if (sentinel) {
+        observer.unobserve(sentinel);
+      }
     };
+  }, [activeTab, visibleItems]);
+
+  // Handle tab selection with better state management
+  const handleTabSelect = useCallback((key) => {
+    setActiveTab(key);
+    setImagesLoaded(false);
   }, []);
+
+  // Load more items with improved handling
+  const loadMoreItems = useCallback(() => {
+    setVisibleItems(prev => ({
+      ...prev,
+      [activeTab]: prev[activeTab] + 4 // Show 4 more items on button click
+    }));
+    setImagesLoaded(false);
+  }, [activeTab]);
+
+  // Enhanced render projects function with loading indicators
+  const renderProjects = (projects, tabKey) => {
+    const visibleProjects = projects.slice(0, visibleItems[tabKey]);
+    
+    return (
+      <>
+        {loadingError && (
+          <div className="alert alert-warning text-center mb-4">
+            Some images failed to load. Please check your internet connection or try again later.
+          </div>
+        )}
+        
+        <Row className="justify-content-center">
+          {visibleProjects.map((project) => (
+            <Col
+              key={project.id}
+              sm={12}
+              md={6}
+              lg={6}
+              className="mb-4"
+            >
+              <div className="js-tilt">
+                <ProjectCard {...project} />
+              </div>
+            </Col>
+          ))}
+        </Row>
+        
+        {/* Load more button with loading state */}
+        {visibleProjects.length < projects.length && (
+          <div className="text-center mt-4 mb-4">
+            <button 
+              className="btn btn-primary" 
+              onClick={loadMoreItems}
+              disabled={!imagesLoaded}
+            >
+              {!imagesLoaded ? 'Loading...' : 'Load More'}
+            </button>
+          </div>
+        )}
+        
+        {/* Invisible sentinel for infinite scroll */}
+        <div id="load-more-sentinel" style={{ height: '1px' }}></div>
+      </>
+    );
+  };
 
   return (
     <section className="project" id="projects">
@@ -184,81 +334,39 @@ export const Projects = () => {
                   className={isVisible ? 'animate__animated animate__fadeIn' : ''}
                 >
                   <h2>Projects</h2>
-                  <Tab.Container id="projects-tabs" defaultActiveKey="first">
-
-
-                  <Nav variant="pills" className="nav-pills mb-5 justify-content-center align-items-center" id="pills-tab">
-                    <Nav.Item>
-                      <Nav.Link eventKey="first">Websites</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="second">Mobile apps</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="third">Social media post</Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-
-
+                  <Tab.Container 
+                    id="projects-tabs" 
+                    defaultActiveKey="first"
+                    onSelect={handleTabSelect}
+                    activeKey={activeTab}
+                  >
+                    <Nav variant="pills" className="nav-pills mb-5 justify-content-center align-items-center" id="pills-tab">
+                      <Nav.Item>
+                        <Nav.Link eventKey="first">Websites</Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="second">Mobile apps</Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="third">Social media post</Nav.Link>
+                      </Nav.Item>
+                    </Nav>
                     
                     <Tab.Content
                       id="slideInUp"
                       className={isVisible ? 'animate__animated animate__slideInUp' : ''}
                     >
                       <Tab.Pane eventKey="first">
-                        <Row className="justify-content-center">
-                          {projectsWeb.map((project) => (
-                            <Col
-                              key={project.id}
-                              sm={12}
-                              md={6}
-                              lg={6}
-                              className="mb-4"
-                            >
-                              <div className="js-tilt">
-                                <ProjectCard {...project} />
-                              </div>
-                            </Col>
-                          ))}
-                        </Row>
+                        {renderProjects(projectsWeb, 'first')}
                       </Tab.Pane>
 
                       <Tab.Pane eventKey="second">
-                        <Row className="justify-content-center">
-                          {projectsMobile.map((project) => (
-                            <Col
-                              key={project.id}
-                              sm={12}
-                              md={6}
-                              lg={6}
-                              className="mb-4"
-                            >
-                              <div className="js-tilt">
-                                <ProjectCard {...project} />
-                              </div>
-                            </Col>
-                          ))}
-                        </Row>
+                        {renderProjects(projectsMobile, 'second')}
                       </Tab.Pane>
 
                       <Tab.Pane eventKey="third">
-                        <Row className="justify-content-center">
-                          {projectSocial.map((project) => (
-                            <Col
-                              key={project.id}
-                              sm={12}
-                              md={6}
-                              lg={6}
-                              className="mb-4"
-                            >
-                              <div className="js-tilt">
-                                <ProjectCard {...project} />
-                              </div>
-                            </Col>
-                          ))}
-                        </Row>
+                        {renderProjects(projectSocial, 'third')}
                       </Tab.Pane>
-
                     </Tab.Content>
                   </Tab.Container>
                 </div>
@@ -267,12 +375,16 @@ export const Projects = () => {
           </Col>
         </Row>
       </Container>
-      <img className="background-image-right" src={colorSharp2} alt="Background decoration" />
+      {/* <img 
+        className="background-image-right" 
+        src={colorSharp2} 
+        alt="Background decoration" 
+        loading="lazy" 
+        width="500"
+        height="auto"
+      /> */}
     </section>
   );
 };
-
-// Modify the ProjectCard component to use LazyLoadImage
-
 
 export default Projects;
