@@ -39,13 +39,10 @@ export const Skills = () => {
               Visual Design
               </button>
               <button class="button-40" role="button">
-              Adobe Creative Suite (Photoshop, Illustrator, InDesign)
+              Adobe Creative Suite (Photoshop, Illustrator)
               </button>
               <button class="button-40" role="button">
               Branding & Identity
-              </button>
-              <button class="button-40" role="button">
-              Print & Digital Design
               </button>
               <button class="button-40" role="button">
               Illustration
@@ -61,9 +58,6 @@ export const Skills = () => {
               </button>
               <button class="button-40" role="button">
               Interaction Design
-              </button>
-              <button class="button-40" role="button">
-              Information Architecture
               </button>
               <button class="button-40" role="button">
               Usability Testing
